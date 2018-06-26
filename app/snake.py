@@ -13,10 +13,15 @@ class Conf:
     PLACE_WIDTH = 300   # 场地宽度
     PLACE_HEIGHT = 300  # 场地高度
     BLOCK_SIZE = 10     # 食物方块大小
-    START_LENGTH = 5    # 初始化时蛇的长度
-    DIRECTION = 0       # 移动方向方向0-横向, 1-竖向
+    SNAKE_LENGTH = 5    # 初始化时蛇的长度
+    DIRECTION = 4       # 移动方向方向1-上, 2-下, 3-左, 4-右
     COLOR = 'red'       # 蛇与食物颜色
     MOVE_SPEED = 200    # 移动速度单位毫秒
+
+    SNAKE_POS = []
+    SNAKE_POINT = []
+
+
 
 
 class Game:
@@ -42,13 +47,13 @@ class Game:
         self.place.pack()
 
         # 创建蛇
-        snake = Snake(self.place)
+        self.snake = Snake(self.place)
 
         # 游戏开始
-        snake.start()
+        self.snake.start()
 
         # 食物投递
-        Food(self.place).get_food()
+        Food(self.place).rnd_pos([])
 
         # 绑定游戏
         root.bind('<Key>', self.key_press)
@@ -98,7 +103,41 @@ class Game:
         messagebox.showinfo(title=APPLICATION_TITLE, message="一个贪吃蛇游戏,系统当前版本1.0")
 
     def key_press(self, event):
-        print('key:', event.keysym)
+        """
+        键盘按下控制操作
+        :param event: 键盘事件
+        :return:
+        """
+        key = event.keysym
+        if key == 'Left':
+            Conf.DIRECTION = 3  # 向左
+            self.place.delete('food')   # 删除食物
+            print('key - left')
+        elif key == 'Right':
+            Conf.DIRECTION = 4  # 向右
+            print('key - right')
+        elif key == "Up":
+            Conf.DIRECTION = 1  # 向上
+            print('key - up')
+        elif key == 'Down':
+            Conf.DIRECTION = 2  # 向下
+            print('key - down')
+        else:
+            print('other')
+
+        self.snake.move()
+
+
+class Point:
+    """
+    点信息
+    """
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def create_point(self, place):
+        place.create_rectangle(self.x, self.y, Conf.BLOCK_SIZE, Conf.BLOCK_SIZE, fill=Conf.COLOR)
 
 
 class Snake:
@@ -111,16 +150,97 @@ class Snake:
         :param place: 运动场地
         """
         self.place = place
+
+        snake_points = []
+        snake_pos = []
+
+        for i in range(Conf.SNAKE_LENGTH):
+            if Conf.DIRECTION == 0:
+                snake_pos.append([Conf.BLOCK_SIZE * i, 0])
+                snake_points.append(place.create_rectangle(Conf.BLOCK_SIZE * i, 0,
+                                                        Conf.BLOCK_SIZE, Conf.BLOCK_SIZE,
+                                                        fill=Conf.COLOR, tags=''))
+
+            else:
+                snake_pos.append([0, Conf.BLOCK_SIZE * i])
+                snake_points.append(place.create_rectangle(0, Conf.BLOCK_SIZE * i, Conf.BLOCK_SIZE, Conf.BLOCK_SIZE, fill=Conf.COLOR))
+
+        Conf.SNAKE_POS = snake_pos
+        Conf.SNAKE_POINT = snake_points
+
+        # print(snake_points)
+
+        """
         if Conf.DIRECTION == 0:
+
+            Point(0, 0)
+
             w = Conf.BLOCK_SIZE * Conf.START_LENGTH
             h = Conf.BLOCK_SIZE
         else:
             w = Conf.BLOCK_SIZE
             h = Conf.BLOCK_SIZE * Conf.START_LENGTH
+        """
 
-        self.place.create_rectangle(0, 0, w, h, fill=Conf.COLOR)
+    def auto_move(self):
+        """
+        自动移动
+        :return:
+        """
+        print(Conf.SNAKE)
+
+        self.place.move()
+
+        ps = [[x[0] + Conf.BLOCK_SIZE, x[1]] for x in Conf.SNAKE]
+
+        print(ps)
+        # self.draw()
+        self.move()
+
+    def draw(self):
+
+        for p in Conf.SNAKE:
+            r = self.place.create_rectangle(p[0], p[1], Conf.BLOCK_SIZE, Conf.BLOCK_SIZE, fill=Conf.COLOR)
+            print(r)
+
+    def move(self):
+        """
+        移动
+        :return:
+        """
+        print('move', Conf.DIRECTION, Conf.SNAKE_LENGTH - 1)
+
+        print(Conf.SNAKE_POINT[Conf.SNAKE_LENGTH - 1])
+
+        # 删除最后一个
+        self.place.delete(Conf.SNAKE_POINT[Conf.SNAKE_LENGTH - 1])
+        del Conf.SNAKE_POINT[Conf.SNAKE_LENGTH - 1]
+        Conf.SNAKE_LENGTH = Conf.SNAKE_LENGTH - 1
+        print(Conf.SNAKE_POINT)
+
+        if Conf.DIRECTION == 1:     # 向上
+            pass
+        elif Conf.DIRECTION == 2:   # 向下
+            pass
+        elif Conf.DIRECTION == 3:   # 向左
+            pass
+        elif Conf.DIRECTION == 4:   # 向右
+            pass
+        print(Conf.SNAKE_POINT)
+
+        # self.place.coords(yellow_line,
+        #     0, 25, 100, 100)   # 使用coords方法移动yellowLine线,移动到
+
+
 
     def eat(self):
+        """
+        吃下一粒食物
+        :return:
+        """
+
+        self.place.delete('food')  # 删除食物
+
         pass
 
     def start(self):
@@ -140,9 +260,10 @@ class Food:
         self.place = place
         pass
 
-    def get_food(self):
+    def rnd_pos(self, snake_pos):
         """
         获取一个食物得到随机开始位置
+        :param snake_pos: 蛇当前位置
         :return:
         """
         x = round(random.random() * (Conf.PLACE_WIDTH / Conf.BLOCK_SIZE))
@@ -163,7 +284,8 @@ class Food:
         # 需要验证排队蛇当前的位置
 
         self.place.create_rectangle(x, y,
-                                    x + Conf.BLOCK_SIZE, y + Conf.BLOCK_SIZE, fill=Conf.COLOR)
+                                    x + Conf.BLOCK_SIZE, y + Conf.BLOCK_SIZE,
+                                    fill=Conf.COLOR, tags='food')
 
 
 class Application(Tk):
