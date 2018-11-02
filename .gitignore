@@ -11,3 +11,6 @@ resource/
 *.zip
 *.swp
 *.code-workspace
+
+git.sh
+.gitignore
