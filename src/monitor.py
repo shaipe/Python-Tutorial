@@ -11,6 +11,8 @@ import configparser
 用于系统进程监控
 author: shaipe
 create: 2018-11-06
+可以使用pyinstaller 将py文件打包为exe文件就可以到其他机器上运行
+pyinstaller --onefile --nowindowed --icon=monitor.ico --clean monitor.py
 """
 
 if platform.system() == 'Windows':
