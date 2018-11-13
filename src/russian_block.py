@@ -8,7 +8,7 @@ APPLICATION_TITLE = '俄罗斯方块'
 
 class Conf:
     """
-    贪吃蛇游戏基础配置
+    基础配置
     """
     PLACE_WIDTH = 400   # 场地宽度
     PLACE_HEIGHT = 600  # 场地高度
