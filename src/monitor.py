@@ -289,7 +289,7 @@ class Monitor:
                                 import subprocess
                                 subprocess.call(execute)
 
-                    self.logger.info('Process Name %s, CPU Use Percent %s UserName %s' %
+                        self.logger.info('Process Name %s, CPU Use Percent %s UserName %s' %
                                      (proc_name, cpu_percent, proc.info["username"]))
 
                 pass
