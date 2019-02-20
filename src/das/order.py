@@ -37,7 +37,8 @@ class Analyzer:
         pay_df = df[df['PayStatus'] == 1]
 
         ddf = pay_df[['Payables', 'ProductNum']]
-        print(ddf.describe())
+        dfd = ddf.describe()
+        print(type(dfd), dfd.to_dict())
 
         # print(payables.items())
 
