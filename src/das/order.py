@@ -2,6 +2,7 @@
 
 from pandas import DataFrame
 import pandas as pd
+import datetime
 
 
 class Analyzer:
@@ -11,6 +12,20 @@ class Analyzer:
 
     def run(self):
         df = self.load_df()
+        # print(pd.to_datetime(df))
+        # return
+        # df['AddTime'] = df['AddTime'].astype('datetime64')
+        # df.to_timestamp()
+
+        # df['AddTime'] = df['AddTime'].map(lambda x: x.strftime('%Y-%m-%d'))
+        df['AddTime'] = df['AddTime'].astype('datetime64[D]')
+
+        print(df.dtypes)
+
+        print(df['AddTime'][0:5])
+
+        # print(df.groupby(['AddTime']).sum())
+        return
         # print(df["Payables"].plot())
         # 统计出有多少客户下单,以及每个用户下了多少单
         dvc = df["UserId"].value_counts()

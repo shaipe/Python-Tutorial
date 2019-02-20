@@ -16,6 +16,8 @@
 - 8. object 
 默认的数据类型是int64,float64.
 
+我使用pandas.to_datetime来解析数据中的日期。 Pandas默认使用datetime64[ns]表示日期，即使日期仅为每日日期。 我想知道是否有一种优雅/聪明的方式将日期转换为datetime.date或datetime64[D]这样
+
 ##### 查看数据类型
 ```python
 df.dtypes
