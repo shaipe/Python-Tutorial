@@ -26,7 +26,8 @@ class Analyze:
             # print(type(e1), type(e2))
             return (e2 - str_to_datetime(e1)).days
 
-        df["Days"] = ot.apply(differ_day, args=(datetime.now(),))
+        # df["Days"] = ot.apply(differ_day, args=(datetime.now(),))
+        df['Days'] = ot.apply(lambda x: (datetime.date() - x.date()).days)
         print(df.to_dict(orient='records'))
 
         describes = df.describe(include=['number'])
