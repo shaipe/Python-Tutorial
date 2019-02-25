@@ -47,6 +47,18 @@ pip list --outdated # 列出有更新的库
 pip install --upgrade library_name # 升级库library_name
 ```
 
+2. python 中通过pip导出所有依赖
+
+```bash
+pip3 freeze > requirements.txt
+```
+
+3. pip 通过依赖文件安装
+
+```bash
+pip3 install --no-cache-dir -r requirements.txt
+```
+
 ### Python 特点
 - 1. 易于学习：Python有相对较少的关键字，结构简单，和一个明确定义的语法，学习起来更加简单。
 
